@@ -1,4 +1,5 @@
 {
+  "name": "vaskoipharma",
   "buildCommand": "echo 'Static build complete'",
   "outputDirectory": ".",
   "cleanUrls": true,
