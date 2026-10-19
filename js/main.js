@@ -229,6 +229,7 @@
 
       dockItems.forEach(item => {
         const target = item.getAttribute('data-target');
+        if (!target) return;
         if (target === currentSectionId) {
           item.classList.add('active');
         } else {
