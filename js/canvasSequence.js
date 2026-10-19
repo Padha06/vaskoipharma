@@ -37,7 +37,7 @@ class SequenceCanvasController {
     this.startRenderLoop();
   }
 
-  // Load the 3 high-res stage images as instant backups
+  // Load the 3 high-res stage images as instant backups with off-thread decoding
   initStageFallbacks() {
     const stagePaths = [
       'assets/images/stage1.png',
@@ -48,25 +48,29 @@ class SequenceCanvasController {
     stagePaths.forEach((src, idx) => {
       const img = new Image();
       img.src = src;
-      img.onload = () => {
+      const onReady = () => {
         this.stageImages[idx] = img;
-        // If no sequence frame is ready yet, draw stage 1 immediately
         if (this.loadedFrames === 0 && idx === 0) {
           this.drawImageCover(img);
         }
       };
+      if ('decode' in img) {
+        img.decode().then(onReady).catch(onReady);
+      } else {
+        img.onload = onReady;
+      }
     });
   }
 
   // Preload all 150 AVIF frames with prioritization
   preloadFrames() {
-    // Priority order: First frame, last frame, middle milestones, then full sequence
-    const priorityIndices = [0, 50, 100, 149];
+    // Priority order: Key stage milestones first, then full sequence
+    const priorityIndices = [0, 25, 50, 75, 100, 125, 149];
     
-    // Load priority frames first
+    // Load priority milestone frames first
     priorityIndices.forEach(index => this.loadSingleFrame(index));
 
-    // Load rest of the frames
+    // Load rest of the frames smoothly
     for (let i = 0; i < this.totalFrames; i++) {
       if (!priorityIndices.includes(i)) {
         this.loadSingleFrame(i);
@@ -81,7 +85,7 @@ class SequenceCanvasController {
     const img = new Image();
     img.src = `assets/sequence/${padNum}.avif`;
     
-    img.onload = () => {
+    const onLoaded = () => {
       this.frames[index] = img;
       this.loadedFrames++;
 
@@ -92,6 +96,15 @@ class SequenceCanvasController {
       }
     };
 
+    if ('decode' in img) {
+      img.decode().then(onLoaded).catch(() => {
+        // Fallback on standard load if decode rejects
+        img.onload = onLoaded;
+      });
+    } else {
+      img.onload = onLoaded;
+    }
+
     img.onerror = () => {
       // If frame fails, map to nearest stage image
       const stageIdx = Math.min(2, Math.floor((index / this.totalFrames) * 3));
@@ -101,7 +114,9 @@ class SequenceCanvasController {
 
   setupResizeHandler() {
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+      const isMobile = window.innerWidth <= 768;
+      // Cap at 1 on mobile to slash GPU memory bandwidth by 4x; cap at 1.5 on desktop
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       const rect = this.canvas.getBoundingClientRect();
 
       this.canvasWidth = rect.width;
@@ -160,20 +175,28 @@ class SequenceCanvasController {
   }
 
   startRenderLoop() {
+    const isMobile = window.innerWidth <= 768;
+    // Fast responsive lerp on mobile touch (0.32) eliminates scrubbing drag; 0.16 on desktop
+    const lerpFactor = isMobile ? 0.32 : 0.16;
+
     const tick = () => {
-      // Smooth linear interpolation for buttery 60fps / 120fps scrubbing
       const delta = (this.targetProgress - this.currentProgress);
-      this.currentProgress += delta * 0.12;
+
+      if (Math.abs(delta) < 0.0006) {
+        this.currentProgress = this.targetProgress;
+      } else {
+        this.currentProgress += delta * lerpFactor;
+      }
 
       const frameIndex = Math.min(
         this.totalFrames - 1,
         Math.max(0, Math.floor(this.currentProgress * this.totalFrames))
       );
 
-      if (frameIndex !== this.lastDrawnFrame || Math.abs(delta) > 0.0005) {
+      if (frameIndex !== this.lastDrawnFrame) {
         this.renderFrame(frameIndex);
-        this.updateHUD(this.currentProgress, frameIndex);
       }
+      this.updateHUD(this.currentProgress, frameIndex);
 
       requestAnimationFrame(tick);
     };
@@ -236,8 +259,7 @@ class SequenceCanvasController {
       offsetY = 0;
     }
 
-    this.ctx.fillStyle = '#f0f7ff';
-    this.ctx.fillRect(0, 0, canvasW, canvasH);
+    // Direct drawImage over the full canvas without redundant full-screen fillRect
     this.ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
   }
 
@@ -247,20 +269,20 @@ class SequenceCanvasController {
     }
   }
 
-  // Synchronize HUD stage layers and progress text
+  // Synchronize HUD stage layers and progress text with state-change gating
   updateHUD(progress, frameIndex) {
     // Determine active stage: Stage 1 (0-33%), Stage 2 (33-66%), Stage 3 (66-100%)
     const activeStage = Math.min(2, Math.floor(progress * 3));
 
+    // Gate DOM updates: only touch DOM when stage actually changes!
+    if (activeStage === this.lastActiveStage) return;
+    this.lastActiveStage = activeStage;
+
     this.stageLayers.forEach((layer, idx) => {
       if (idx === activeStage) {
-        if (!layer.classList.contains('active')) {
-          layer.classList.add('active');
-        }
+        layer.classList.add('active');
       } else {
-        if (layer.classList.contains('active')) {
-          layer.classList.remove('active');
-        }
+        layer.classList.remove('active');
       }
     });
 

@@ -4,10 +4,11 @@
    Conveys Trust, Scientific Precision, and Modern Technological Clarity
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-table: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', "SF Mono", Menlo, Consolas, monospace;
   
   /* Primary Trust Blue Palette */
@@ -829,6 +830,9 @@ body.loaded #vaskoi-preloader {
   height: 100%;
   object-fit: cover;
   z-index: 1;
+  will-change: transform;
+  transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Horizontal Floating HUD Layers (Vertically Centered, Empty in Center) */
@@ -1039,73 +1043,142 @@ body.loaded #vaskoi-preloader {
   background: #050d18;
   color: var(--color-white);
   padding: 8rem 3.5rem;
+  position: relative;
+}
+
+.comparison-title {
+  font-family: var(--font-primary);
+  font-size: clamp(2.2rem, 3.8vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: var(--color-white);
+  margin-bottom: 0.9rem;
+}
+
+.comparison-subtitle {
+  font-family: var(--font-primary);
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: #94a3b8;
+  max-width: 740px;
+  margin-bottom: 3.5rem;
 }
 
 .comparison-table-wrap {
   width: 100%;
   overflow-x: auto;
-  margin-top: 4rem;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(12, 30, 51, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(2, 132, 199, 0.12);
 }
 
 .comparison-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 780px;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
+  font-family: var(--font-table);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
 }
 
 .comparison-table th,
 .comparison-table td {
-  padding: 1.6rem 2rem;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+  padding: 1.4rem 1.8rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+  vertical-align: middle;
 }
 
-.comparison-table th {
-  font-family: var(--font-mono);
+.comparison-table thead tr th {
+  background: rgba(7, 21, 38, 0.9);
+  font-family: var(--font-primary);
   font-size: 0.82rem;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-text-light-muted);
-}
-
-.comparison-table th.highlight-col,
-.comparison-table td.highlight-col {
-  background: rgba(14, 165, 233, 0.08);
-  border-left: 1px solid rgba(56, 189, 248, 0.3);
-  border-right: 1px solid rgba(56, 189, 248, 0.3);
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.28);
 }
 
 .comparison-table th.highlight-col {
   color: var(--color-trust-blue-light);
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  background: linear-gradient(180deg, rgba(2, 132, 199, 0.24) 0%, rgba(2, 132, 199, 0.12) 100%);
+  border-left: 1px solid rgba(56, 189, 248, 0.35);
+  border-right: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.comparison-table td.highlight-col {
+  background: rgba(2, 132, 199, 0.09);
+  border-left: 1px solid rgba(56, 189, 248, 0.35);
+  border-right: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.comparison-table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.comparison-table tbody tr:hover td.highlight-col {
+  background-color: rgba(2, 132, 199, 0.15);
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .comparison-table td {
-  font-size: 1.05rem;
-  color: rgba(240, 247, 255, 0.85);
+  font-family: var(--font-table);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #cbd5e1;
 }
 
 .feature-title {
+  font-family: var(--font-primary);
+  font-size: 0.98rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: #f8fafc;
+  letter-spacing: -0.01em;
 }
 
 .status-badge-positive {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  color: var(--color-trust-blue-light);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
+  gap: 0.45rem;
+  padding: 0.38rem 0.85rem;
+  background: rgba(2, 132, 199, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 999px;
+  color: #38bdf8;
+  font-family: var(--font-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.15);
 }
 
 .status-badge-negative {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  color: rgba(255, 255, 255, 0.35);
-  font-family: var(--font-mono);
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.32);
+  border-radius: 999px;
+  color: #fda4af;
+  font-family: var(--font-primary);
   font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -1383,39 +1456,15 @@ body.loaded #vaskoi-preloader {
     padding-bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Minimal Clean Header on Mobile */
-  .site-header {
-    padding: 0.85rem 1.25rem;
-    height: 4.6rem;
-    background: rgba(240, 247, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--color-trust-ice-border);
-  }
-
-  .header-nav-cluster {
-    display: none !important;
-  }
-
-  .header-brand-pill {
-    padding: 0.5rem 1rem;
-    font-size: 1.05rem;
-  }
-
+  /* Completely remove the header and header navigation on mobile devices as requested */
+  .site-header,
   .mobile-header-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.85rem;
-    background: rgba(224, 242, 254, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--color-trust-ice-border);
-    border-radius: 999px;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--color-trust-blue);
-    letter-spacing: 0.08em;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
   }
 
   /* Only display the bottom bar AFTER preloader has fully finished (body has .loaded) */
@@ -1526,10 +1575,10 @@ body.loaded #vaskoi-preloader {
     background: rgba(224, 242, 254, 0.4);
   }
 
-  /* Hero Section on Mobile */
+  /* Hero Section on Mobile (Full Screen Immersive with No Header) */
   .hero-section {
-    min-height: calc(100vh - 4.5rem);
-    padding-top: calc(var(--header-height) + 1rem);
+    min-height: 100vh;
+    padding-top: max(2rem, env(safe-area-inset-top, 1.2rem));
   }
 
   .hero-content {
@@ -1575,14 +1624,25 @@ body.loaded #vaskoi-preloader {
 
   /* 300vh Sequence Canvas on Mobile */
   .sequence-section {
-    height: 270vh;
+    height: 250vh;
+  }
+
+  .sequence-sticky-wrap {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  #sequence-canvas {
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .sequence-hud-stage-layer {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 5.5rem 1.25rem calc(6.5rem + env(safe-area-inset-bottom));
+    padding: max(2.2rem, calc(1.5rem + env(safe-area-inset-top, 0px))) 1.25rem calc(4.8rem + env(safe-area-inset-bottom, 0px));
+    transition: opacity 0.22s ease !important;
   }
 
   .hud-pill-group-left {
@@ -1606,12 +1666,24 @@ body.loaded #vaskoi-preloader {
     flex: 1; /* Guarantees the 3D molecule in center is 100% visible */
   }
 
+  /* Eliminate heavy clip-path re-rasterization on mobile for 60/120fps instant stage transitions */
   .hud-pill {
+    clip-path: none !important;
+    transform: translateY(6px);
+    opacity: 0;
+    transition: opacity 0.22s ease, transform 0.22s var(--ease-smooth) !important;
+    will-change: opacity, transform;
     font-size: 0.82rem;
     padding: 0.55rem 1.1rem;
     max-width: 90vw;
     text-align: center;
     white-space: normal;
+  }
+
+  .sequence-hud-stage-layer.active .hud-pill {
+    clip-path: none !important;
+    transform: translateY(0) !important;
+    opacity: 1 !important;
   }
 
   .hud-pill.pill-num {
@@ -1622,10 +1694,11 @@ body.loaded #vaskoi-preloader {
   }
 
   .sequence-mini-tracker {
-    top: 5rem;
+    top: max(1rem, env(safe-area-inset-top, 0.8rem));
     right: 1.25rem;
     font-size: 0.72rem;
     padding: 0.3rem 0.7rem;
+    z-index: 20;
   }
 
   /* Technology Section on Mobile */
@@ -1714,13 +1787,28 @@ body.loaded #vaskoi-preloader {
 
   /* Comparison Section on Mobile */
   .section-comparison {
-    padding: 5rem 1.25rem;
+    padding: 4.5rem 1.25rem;
+  }
+
+  .comparison-title {
+    font-size: clamp(1.9rem, 6.5vw, 2.6rem);
+  }
+
+  .comparison-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+  }
+
+  .comparison-table-wrap {
+    margin-top: 2rem;
+    border-radius: 12px;
   }
 
   .comparison-table th,
   .comparison-table td {
-    padding: 1.1rem 1rem;
-    font-size: 0.88rem;
+    padding: 1rem 1.1rem;
+    font-size: 0.86rem;
   }
 
   /* Partner CTA Section on Mobile */
