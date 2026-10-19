@@ -207,6 +207,40 @@
     }
   }
 
+  // 7. Mobile Bottom Floating Dock Active State Tracking
+  function initMobileBottomDock() {
+    const dockItems = document.querySelectorAll('.mobile-dock-item');
+    if (!dockItems.length) return;
+
+    const sectionIds = ['technology', 'sequence-track', 'capabilities', 'benchmarks'];
+    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+    function updateActiveDock() {
+      const scrollY = window.scrollY + (window.innerHeight * 0.4);
+
+      let currentSectionId = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        const height = sec.offsetHeight;
+        if (scrollY >= top && scrollY < top + height) {
+          currentSectionId = sec.id;
+        }
+      });
+
+      dockItems.forEach(item => {
+        const target = item.getAttribute('data-target');
+        if (target === currentSectionId) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveDock, { passive: true });
+    updateActiveDock();
+  }
+
   // Initialize all subsystems
   document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
@@ -215,6 +249,7 @@
     initAccordion();
     initMetricCounters();
     initDemoModal();
+    initMobileBottomDock();
   });
 
 })();

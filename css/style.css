@@ -1339,12 +1339,18 @@ body.loaded #vaskoi-preloader {
 }
 
 /* ==========================================================================
-   RESPONSIVE QUERIES
+   MOBILE BOTTOM FLOATING DOCK & RESPONSIVE QUERIES
    ========================================================================== */
+
+/* Default Desktop: Hide mobile specific components */
+.mobile-bottom-dock,
+.mobile-header-status {
+  display: none;
+}
 
 @media (max-width: 1024px) {
   .site-header {
-    padding: 1.2rem 1.5rem;
+    padding: 1.2rem 1.8rem;
   }
   .header-nav-cluster nav {
     display: none;
@@ -1362,43 +1368,372 @@ body.loaded #vaskoi-preloader {
   .sequence-hud-stage-layer {
     padding: 0 2rem;
   }
-  .hud-pill {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
 }
 
 @media (max-width: 768px) {
+  /* Prevent content hiding behind bottom dock */
+  body {
+    padding-bottom: calc(5.2rem + env(safe-area-inset-bottom));
+  }
+
+  /* Minimal Clean Header on Mobile */
+  .site-header {
+    padding: 0.85rem 1.25rem;
+    height: 4.6rem;
+    background: rgba(240, 247, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--color-trust-ice-border);
+  }
+
+  .header-nav-cluster {
+    display: none !important;
+  }
+
+  .header-brand-pill {
+    padding: 0.5rem 1rem;
+    font-size: 1.05rem;
+  }
+
+  .mobile-header-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    background: rgba(224, 242, 254, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-trust-ice-border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-trust-blue);
+    letter-spacing: 0.08em;
+  }
+
+  /* Ultra-Professional Mobile Bottom Floating Dock Island */
+  .mobile-bottom-dock {
+    display: flex;
+    position: fixed;
+    bottom: max(1rem, calc(0.6rem + env(safe-area-inset-bottom)));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 1.6rem);
+    max-width: 440px;
+    height: 4.2rem;
+    background: rgba(240, 247, 255, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(186, 230, 253, 0.95);
+    border-radius: 999px;
+    box-shadow: 0 16px 40px rgba(7, 21, 38, 0.22), 0 0 20px rgba(2, 132, 199, 0.16);
+    z-index: 9999;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .mobile-dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    flex: 1;
+    height: 3.2rem;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-family: var(--font-primary);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    transition: all 0.25s ease;
+  }
+
+  .mobile-dock-item .dock-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2.2;
+    transition: transform 0.25s ease, stroke 0.25s ease;
+  }
+
+  .mobile-dock-item:active,
+  .mobile-dock-item.active {
+    color: var(--color-trust-blue);
+    background: rgba(224, 242, 254, 0.9);
+  }
+
+  .mobile-dock-item:active .dock-icon,
+  .mobile-dock-item.active .dock-icon {
+    transform: translateY(-1px);
+    stroke: var(--color-trust-blue);
+  }
+
+  .mobile-dock-btn-cta {
+    background: linear-gradient(135deg, var(--color-trust-blue) 0%, var(--color-trust-blue-hover) 100%);
+    color: var(--color-white);
+    font-family: var(--font-primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.65rem 1.15rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-trust-blue-light);
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 0.3rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .mobile-dock-btn-cta:active {
+    transform: scale(0.96);
+  }
+
+  .dock-btn-arrow {
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  /* Hero Section on Mobile */
+  .hero-section {
+    min-height: calc(100vh - 4.5rem);
+    padding-top: calc(var(--header-height) + 1rem);
+  }
+
   .hero-content {
-    padding: 3rem 1.5rem;
+    padding: 2.5rem 1.25rem 3.5rem;
   }
-  .section-light,
-  .section-statement,
-  .section-metrics,
-  .section-comparison,
-  .section-cta,
-  .site-footer {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+
+  .hero-pill-badge {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.95rem;
+    margin-bottom: 1.4rem;
   }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 8.5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-bottom: 1.4rem;
+  }
+
+  .hero-description {
+    font-size: 1.02rem;
+    line-height: 1.55;
+    margin-bottom: 2.2rem;
+    color: rgba(240, 247, 255, 0.9);
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.85rem;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem;
+    font-size: 0.85rem;
+  }
+
+  .hero-scroll-indicator {
+    display: none !important;
+  }
+
+  /* 300vh Sequence Canvas on Mobile */
+  .sequence-section {
+    height: 270vh;
+  }
+
+  .sequence-hud-stage-layer {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5.5rem 1.25rem calc(6.5rem + env(safe-area-inset-bottom));
+  }
+
+  .hud-pill-group-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 0.6rem;
+  }
+
+  .hud-pill-group-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hud-center-spacer {
+    min-width: 0;
+    width: 100%;
+    flex: 1; /* Guarantees the 3D molecule in center is 100% visible */
+  }
+
+  .hud-pill {
+    font-size: 0.82rem;
+    padding: 0.55rem 1.1rem;
+    max-width: 90vw;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .hud-pill.pill-num {
+    width: 2.3rem;
+    height: 2.3rem;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .sequence-mini-tracker {
+    top: 5rem;
+    right: 1.25rem;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  /* Technology Section on Mobile */
+  .section-light {
+    padding: 4.5rem 1.25rem;
+  }
+
+  .section-header-meta {
+    grid-template-columns: 50px 1fr 60px;
+    font-size: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .grid-intro {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .intro-headline-wrap {
+    position: static;
+  }
+
+  .intro-title {
+    font-size: clamp(2rem, 6.5vw, 2.8rem);
+    margin-bottom: 1.2rem;
+  }
+
+  .intro-lead-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+  }
+
+  .intro-headline-wrap .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .accordion-item {
+    padding: 1.4rem 0;
+  }
+
+  .accordion-title {
+    font-size: 1.15rem;
+  }
+
+  .accordion-num {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .accordion-item.active .accordion-body {
+    padding-left: 2.8rem;
+  }
+
+  /* Statement Section on Mobile */
+  .section-statement {
+    padding: 4rem 1.25rem;
+  }
+
+  .statement-text {
+    font-size: clamp(1.55rem, 5.5vw, 2.3rem);
+    line-height: 1.25;
+  }
+
+  /* Metrics Section on Mobile */
+  .section-metrics {
+    padding: 5rem 1.25rem;
+  }
+
   .metrics-grid {
     grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 2.5rem;
   }
-  .hero-scroll-indicator {
-    display: none;
+
+  .metric-card {
+    padding: 1.8rem 1.4rem;
+    border-radius: 12px;
   }
+
+  .metric-number {
+    font-size: 3.2rem;
+  }
+
+  /* Comparison Section on Mobile */
+  .section-comparison {
+    padding: 5rem 1.25rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 1.1rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  /* Partner CTA Section on Mobile */
+  .section-cta {
+    padding: 6rem 1.25rem;
+  }
+
+  .cta-title {
+    font-size: clamp(2.1rem, 7vw, 3rem);
+  }
+
+  .cta-description {
+    font-size: 1.08rem;
+    line-height: 1.55;
+    margin-bottom: 2.4rem;
+  }
+
+  .cta-box .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer on Mobile */
+  .site-footer {
+    padding: 4rem 1.25rem calc(6.5rem + env(safe-area-inset-bottom));
+  }
+
   .footer-locations {
     flex-direction: column;
     gap: 2rem;
   }
-  .sequence-hud-stage-layer {
+
+  .footer-bottom {
     flex-direction: column;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 0 1.5rem;
-  }
-  .hud-center-spacer {
-    min-width: 0;
-    height: 180px;
+    gap: 0.8rem;
+    text-align: center;
   }
 }
+
